@@ -1,0 +1,26 @@
+digraph depgraph {
+    N3_ADD_0 -> N5_ADD_0;
+    N5_ADD_0 -> N6_ADD_0;
+    N6_ADD_0 -> N7_ADD_0;
+    N6_ADD_0 -> N1_ADD_1 [constraint=false, color=blue, label="1"];
+    N1_ADD_0 -> N3_ADD_0;
+    N1_ADD_0 -> N2_MUL_0;
+    N2_MUL_0 -> N4_MUL_0;
+    N4_MUL_0 -> N7_ADD_0;
+    N3_ADD_1 -> N5_ADD_1;
+    N5_ADD_1 -> N6_ADD_1;
+    N6_ADD_1 -> N7_ADD_1;
+    N6_ADD_1 -> N1_ADD_2 [constraint=false, color=blue, label="1"];
+    N1_ADD_1 -> N3_ADD_1;
+    N1_ADD_1 -> N2_MUL_1;
+    N2_MUL_1 -> N4_MUL_1;
+    N4_MUL_1 -> N7_ADD_1;
+    N3_ADD_2 -> N5_ADD_2;
+    N5_ADD_2 -> N6_ADD_2;
+    N6_ADD_2 -> N7_ADD_2;
+    N6_ADD_2 -> N1_ADD_0 [constraint=false, color=blue, label="1"];
+    N1_ADD_2 -> N3_ADD_2;
+    N1_ADD_2 -> N2_MUL_2;
+    N2_MUL_2 -> N4_MUL_2;
+    N4_MUL_2 -> N7_ADD_2;
+}
