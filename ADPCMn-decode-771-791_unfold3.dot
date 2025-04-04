@@ -1,0 +1,35 @@
+digraph depgraph {
+    n0_0 [label=""787:DMA_STORE""];
+    n1_0 [label=""786:DMA_LOAD""];
+    n2_0 [label=""785:ISUB""];
+    n3_0 [label=""788:IADD""];
+    n4_0 [label=""773:IFLE""];
+    n0_1 [label=""787:DMA_STORE""];
+    n1_1 [label=""786:DMA_LOAD""];
+    n2_1 [label=""785:ISUB""];
+    n3_1 [label=""788:IADD""];
+    n4_1 [label=""773:IFLE""];
+    n0_2 [label=""787:DMA_STORE""];
+    n1_2 [label=""786:DMA_LOAD""];
+    n2_2 [label=""785:ISUB""];
+    n3_2 [label=""788:IADD""];
+    n4_2 [label=""773:IFLE""];
+    n1_0 -> n0_0;
+    n2_0 -> n1_0;
+    n3_0 -> n0_1;
+    n3_0 -> n2_1;
+    n3_0 -> n3_1;
+    n3_0 -> n4_1;
+    n1_1 -> n0_1;
+    n2_1 -> n1_1;
+    n3_1 -> n0_2;
+    n3_1 -> n2_2;
+    n3_1 -> n3_2;
+    n3_1 -> n4_2;
+    n1_2 -> n0_2;
+    n2_2 -> n1_2;
+    n3_2 -> n0_0 [constraint=false, color=blue, label="1"];
+    n3_2 -> n2_0 [constraint=false, color=blue, label="1"];
+    n3_2 -> n3_0 [constraint=false, color=blue, label="1"];
+    n3_2 -> n4_0 [constraint=false, color=blue, label="1"];
+}
