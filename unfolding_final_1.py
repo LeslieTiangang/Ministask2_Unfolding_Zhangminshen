@@ -2,14 +2,14 @@ import networkx as nx
 from pathlib import Path
 
 def extract_base(node):
-    """Strictly split by the first underscore, n3_0_1 → n3"""
+    """严格按第一个下划线拆分，n3_0_1 → n3"""
     return node.split('_')[0]
 
 def unfold_graph(original_graph: nx.DiGraph, k: int) -> nx.DiGraph:
     if k < 1 or not isinstance(k, int):
-        raise ValueError("k must be a positive integer")
+        raise ValueError("k必须为正整数")
     
-    # Detect constraint edges (edges with constraint=false)
+    # 检测约束边（具有constraint=false的边）
     constraint_edges = set()
     for u, v, data in original_graph.edges(data=True):
         if data.get('constraint') == 'false':
@@ -17,50 +17,50 @@ def unfold_graph(original_graph: nx.DiGraph, k: int) -> nx.DiGraph:
     
     unfolded = nx.DiGraph()
     
-    # Generate nodes (preserve original labels)
+    # 生成节点（保留原始标签）
     for cycle in range(k):
         for node in original_graph.nodes:
             base = extract_base(node)
             new_node = f"{base}_{cycle}"
             unfolded.add_node(new_node, **original_graph.nodes[node])
     
-    # Edge processing logic
+    # 边处理逻辑
     for cycle in range(k):
         for u, v, data in original_graph.edges(data=True):
             u_base = extract_base(u)
             v_base = extract_base(v)
             
-            # Check if it's a constraint edge
+            # 判断是否是约束边
             is_constraint = (u, v) in constraint_edges
             
-            # Determine delta
+            # 确定delta
             delta = 1 if is_constraint else 0
             dst_cycle = (cycle + delta) % k
             
-            # Build new edge data
+            # 构建新边数据
             new_data = data.copy()
             
-            # Handle constraint edge attributes
+            # 处理约束边的属性
             if is_constraint:
-                # Only retain attributes when it's the last cycle and destination cycle is 0
+                # 只有当是最后一个周期且目标周期为0时保留属性
                 if cycle == k - 1 and dst_cycle == 0:
-                    # Keep all attributes
+                    # 保留所有属性
                     pass
                 else:
-                    # Remove constraint, color, label attributes
+                    # 移除constraint, color, label属性
                     for attr in ['constraint', 'color', 'label']:
                         if attr in new_data:
                             del new_data[attr]
             else:
-                # Ensure non-constraint edges don't cross cycles
-                assert dst_cycle == cycle, "Non-constraint edges cannot cross cycles"
+                # 确保非约束边不跨周期
+                assert dst_cycle == cycle, "非约束边不能跨周期"
             
-            # Handle label formatting (preserve original value, just remove and re-add quotes)
+            # 处理label的格式（保留原始值，仅去除引号后重新包裹）
             if 'label' in new_data:
                 cleaned_label = str(new_data['label']).replace('"', '')
                 new_data['label'] = f'"{cleaned_label}"'
             
-            # Add edge to unfolded graph
+            # 添加边到展开图
             unfolded.add_edge(
                 f"{u_base}_{cycle}",
                 f"{v_base}_{dst_cycle}",
@@ -72,7 +72,7 @@ def unfold_graph(original_graph: nx.DiGraph, k: int) -> nx.DiGraph:
 def process_unfolding(input_path: str, k: int, output_dir: str = None):
     input_path = Path(input_path)
     if not input_path.exists():
-        raise FileNotFoundError(f"File not found: {input_path}")
+        raise FileNotFoundError(f"文件未找到: {input_path}")
     
     output_dir = Path(output_dir) if output_dir else input_path.parent
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -84,11 +84,11 @@ def process_unfolding(input_path: str, k: int, output_dir: str = None):
     
     with open(output_path, 'w') as f:
         f.write("digraph depgraph {\n")
-        # Write node definitions
+        # 写入节点定义
         for node, data in unfolded.nodes(data=True):
-            label = data.get('label', '')
-            f.write(f'    {node} [label={label}];\n')
-        # Write edge definitions
+            label = data.get('label', '""')  # 默认空标签为双引号 ""
+            f.write(f'    {node} [label={label}];\n')  # 直接使用 label，不加引号
+        # 写入边定义
         for u, v, data in unfolded.edges(data=True):
             attrs = []
             for attr in ['constraint', 'color', 'label']:
@@ -105,10 +105,10 @@ def process_unfolding(input_path: str, k: int, output_dir: str = None):
             f.write(edge_str)
         f.write("}\n")
     
-    print(f"Processing complete, results saved to: {output_path}")
+    print(f"处理完成，结果已保存至: {output_path}")
 
-# Usage example
-input_file = r"C:\self\Study\ss24\high level synthese\minitask2\input\ADPCMn-decode-771-791.dot"
+# 使用示例
+input_file = r"C:\self\Study\ss24\high level synthese\minitask2\input\ADPCMn-decode-425-472.dot"
 output_path = r"C:\self\Study\ss24\high level synthese\minitask2\output"
 process_unfolding(
     input_path=input_file,
