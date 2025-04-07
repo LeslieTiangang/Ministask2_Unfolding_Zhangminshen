@@ -87,7 +87,7 @@ def process_unfolding(input_path: str, k: int, output_dir: str = None):
         # Write node definitions
         for node, data in unfolded.nodes(data=True):
             label = data.get('label', '')
-            f.write(f'    {node} [label="{label}"];\n')
+            f.write(f'    {node} [label={label}];\n')
         # Write edge definitions
         for u, v, data in unfolded.edges(data=True):
             attrs = []
